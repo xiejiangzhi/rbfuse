@@ -1,6 +1,8 @@
 # RBfuse
 
-Ruby FUSE, with [FFI](https://github.com/ffi/ffi)
+简单的使用 [FFI](https://github.com/ffi/ffi)  实现的 FUSE ruby 库
+
+目前只是一个玩具项目，没有测试，暂时只有 OSX 上可以使用
 
 ## Require  
 
@@ -24,12 +26,12 @@ Or install it yourself as:
 
 ## Usage
 
-see examples/hello
+See examples/hello
 
 ## TODO
 
-* interface test
-* linux testing & fix
+* 各种接口的测试 
+* Linux 接口的测试与修复
 
 ## Contributing
 
