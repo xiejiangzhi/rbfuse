@@ -1,0 +1,117 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "rbfuse"
+require 'pry'
+
+
+default_str = 'hello fuse'
+file_system = {
+  '/hello' => "hello fuse.\nfirst file."
+}
+
+FO = RBFuse::FuseOperations.new
+
+# get file attr
+FO[:getattr] = Proc.new do |path, s_pointer|
+  stbuf = RBFuse::Stat.new(s_pointer)
+
+  case path
+  when '/'
+    stbuf[:st_mode] = RBFuse::Stat::S_IFDIR | 0755
+    stbuf[:st_nlink] = 2
+    0
+  else 
+    if file_system[path]
+      stbuf[:st_mode] = RBFuse::Stat::S_IFREG | 0666
+      stbuf[:st_nlink] = 1
+      stbuf[:st_size] = file_system[path].length
+      0
+    else
+      -Errno::ENOENT::Errno
+    end
+  end
+end
+
+# read dir
+FO[:readdir] = Proc.new do |path, buf, filter, offset, file_info|
+  case path
+  when '/'
+    filter.call(buf, ".", nil, 0)
+    filter.call(buf, "..", nil, 0)
+    file_system.each do |fpath, data|
+      filter.call(buf, fpath[1..-1], nil, 0)
+    end
+    0
+  else
+    -Errno::ENOENT::Errno
+  end
+end
+
+FO[:open] = Proc.new do |path, file_info|
+  0
+end
+
+# read file
+FO[:read] = Proc.new do |path, buf, size, offset, file_info|
+  if data = file_system[path]
+    len = data.length
+
+    if offset < len
+      ((offset + size > len) ? len - offset : size).tap do |size|
+        buf.write_string(data[offset...(offset + size)])
+      end
+    else
+      0
+    end
+  else
+    -Errno::ENOENT::Errno
+  end
+end
+
+# write data
+FO[:write] = Proc.new do |path, buf, size, offset, file_info|
+  data = (file_system[path] ||= '')
+
+  if offset > data.length
+    -Errno::EINVAL::Errno
+  elsif offset == data.length
+    file_system[path] += buf.read_string_length(size)
+    size
+  else
+    end_index = [size. data.length].min
+    file_system[path][offset...end_index] = buf.read_string_length(size)
+    size
+  end
+end
+
+FO[:truncate] = Proc.new do |path, size|
+  file_system[path] = file_system[path][0...size]
+  0
+end
+
+# create file
+FO[:mknod] = Proc.new do |path, mode, rdev|
+  file_system[path] = ''
+  0
+end
+
+# remove file
+FO[:unlink] = Proc.new do |path|
+  file_system.delete(path)
+  0
+end
+
+# permission
+FO[:access] = Proc.new {|path, mask| 0 }
+
+FO[:release] = Proc.new {|path, file_info| 0 }
+
+ARGV.unshift(__FILE__)
+ARGV.push('-s') unless ARGV.include?('-s')
+ARGV.push('-f') unless ARGV.include?('-f')
+argv = FFI::MemoryPointer.new(:string, ARGV.length)
+argv.write_array_of_pointer(ARGV.map {|s| FFI::MemoryPointer.from_string(s) })
+
+RBFuse.fuse_main(ARGV.length, argv, FO, nil)
+
