@@ -32,6 +32,7 @@ See examples/hello
 
 ## TODO
 
+* 支持 fuse 多线程选项
 * 支持更多的接口
 * 各种接口的测试 
 * 测试 32 位系统的使用

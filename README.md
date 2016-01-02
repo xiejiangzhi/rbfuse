@@ -30,6 +30,7 @@ see examples/hello
 
 ## TODO
 
+* support fuse multiple threads
 * more interface
 * interface test
 * test 32 bit system
