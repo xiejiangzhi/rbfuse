@@ -2,6 +2,8 @@
 
 Ruby FUSE, with [FFI](https://github.com/ffi/ffi)
 
+Support OSX And Linux 64 bit system
+
 ## Require  
 
 * fuse or osxfuse 2.x
@@ -28,8 +30,9 @@ see examples/hello
 
 ## TODO
 
+* more interface
 * interface test
-* linux testing & fix
+* test 32 bit system
 
 ## Contributing
 

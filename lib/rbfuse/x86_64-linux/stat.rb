@@ -2,13 +2,17 @@ module RBFuse
   class Stat < FFI::Struct
 
     # http://man7.org/linux/man-pages/man2/stat.2.html
+    # https://github.com/lattera/glibc/blob/a2f34833b1042d5d8eeb263b4cf4caaea138c4ad/sysdeps/unix/sysv/linux/sparc/sparc64/kernel_stat.h
+    #
+    # stat64
     layout(
       :st_dev, :dev_t,
       :st_ino, :ino_t,
-      :st_mode, :mode_t,
       :st_nlink, :nlink_t,
+      :st_mode, :mode_t,
       :st_uid, :uid_t,
       :st_gid, :gid_t,
+      :__pad0, :uint,
       :st_rdev, :dev_t,
       :st_size, :off_t,
       :st_blksize, :blksize_t,
@@ -16,7 +20,7 @@ module RBFuse
 
       :st_atimespec, RBFuse::Timespec,
       :st_mtimespec, RBFuse::Timespec,
-      :st_ctimespec, RBFuse::Timespec
+      :st_ctimespec, RBFuse::Timespec,
     )
 
     # http://man7.org/linux/man-pages/man2/stat.2.html

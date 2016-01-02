@@ -20,7 +20,6 @@ module RBFuse
 
   autoload :FuseEnum, 'rbfuse/fuse_enum'
 
-  autoload :Errno, "rbfuse/#{PLATFORM_NAME}/Errno"
   autoload :Stat, "rbfuse/#{PLATFORM_NAME}/stat"
   autoload :Statvfs, "rbfuse/#{PLATFORM_NAME}/statvfs"
   autoload :Utimbuf, "rbfuse/#{PLATFORM_NAME}/utimbuf"

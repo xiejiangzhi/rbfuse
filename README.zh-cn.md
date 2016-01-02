@@ -2,7 +2,9 @@
 
 简单的使用 [FFI](https://github.com/ffi/ffi)  实现的 FUSE ruby 库
 
-目前只是一个玩具项目，没有测试，暂时只有 OSX 上可以使用
+支持 OSX 与 Linux 64bit
+
+目前只是一个玩具项目，没有测试
 
 ## Require  
 
@@ -30,8 +32,9 @@ See examples/hello
 
 ## TODO
 
+* 支持更多的接口
 * 各种接口的测试 
-* Linux 接口的测试与修复
+* 测试 32 位系统的使用
 
 ## Contributing
 

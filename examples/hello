@@ -1,8 +1,17 @@
 #!/usr/bin/env ruby
 
+# 
+# Support operations:
+#   ls path
+#   cd dir
+#   touch path
+#   echo str > path
+#   cat path
+#   rm path
+#
+
 require "bundler/setup"
 require "rbfuse"
-require 'pry'
 
 
 default_str = 'hello fuse'
